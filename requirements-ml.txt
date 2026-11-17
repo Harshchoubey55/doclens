@@ -1,0 +1,10 @@
+# training / local-model inference (GPU). The QLoRA notebook installs unsloth separately.
+torch
+transformers>=4.49
+datasets>=2.19
+accelerate>=0.30
+peft>=0.11
+bitsandbytes>=0.43
+wandb>=0.16
+# optional: PostgreSQL + pgvector backend for the store
+psycopg[binary]>=3.1
