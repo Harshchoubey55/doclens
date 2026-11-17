@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.pytest_cache/
+runs/
+outputs/
+*.db
+wandb/
+doclens-qwen25vl-lora/
+.env
