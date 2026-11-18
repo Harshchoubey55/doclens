@@ -52,13 +52,16 @@ STORES = ["Kopi Senja", "Warung Nusantara", "Bakmi Ceria", "Roti Pagi Bakery", "
 
 def parse_amount(s: Optional[str]) -> Optional[float]:
     """CORD style amounts: '60.000' and '60,000' mean 60000, '2.00' means 2, '-5.000' is negative.
-    A final separator followed by 1-2 digits is a decimal point; every other one is a thousands mark."""
+    A final separator followed by 1-2 digits is a decimal point; every other one is a thousands mark.
+    Some CORD fields hold several amounts ('55,834 55,800', before and after rounding); the last one is used."""
     if not s:
         return None
-    neg = s.strip().startswith("-")
-    m = re.sub(r"[^0-9.,]", "", s)
-    if not re.search(r"\d", m):
+    tokens = re.findall(r"-?\s*\d[\d.,]*", s)
+    if not tokens:
         return None
+    tok = tokens[-1]
+    neg = tok.startswith("-") or (len(tokens) == 1 and s.strip().startswith("-"))
+    m = re.sub(r"[^0-9.,]", "", tok)
     dec = re.search(r"[.,](\d{1,2})$", m)
     whole = re.sub(r"[.,]", "", m[: dec.start()] if dec else m) or "0"
     v = float(whole) + (float("0." + dec.group(1)) if dec else 0.0)

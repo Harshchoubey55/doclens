@@ -38,6 +38,8 @@ def test_parse_amount():
     assert parse_amount("-5.000") == -5000
     assert parse_amount("2.00") == 2
     assert parse_amount("x") is None
+    assert parse_amount("Rp. 1.591.600") == 1591600
+    assert parse_amount("55,834 55,800") == 55800  # two amounts in one field: keep the last, don't merge digits
 
 
 @pytest.mark.parametrize("bad", ["DELETE FROM receipts", "select 1; drop table items", "PRAGMA table_info(items)",
