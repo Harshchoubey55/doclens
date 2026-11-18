@@ -36,7 +36,7 @@ class GeminiExtractor:
 
         self.genai = genai
         self.client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"))
-        self.model = model or os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
+        self.model = model or os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
         self.few_shot = list(few_shot)
         self.min_interval_s = min_interval_s  # free-tier rate limits
         self._last = 0.0
@@ -70,8 +70,9 @@ class GeminiExtractor:
                     return restrict(resp.parsed.model_dump(exclude_none=True))
                 return parse_model_output(resp.text or "")
             except Exception as e:  # 429 / transient errors: back off and retry
-                if attempt == retries - 1:
-                    raise
+                code = getattr(e, "code", None)
+                if attempt == retries - 1 or (isinstance(code, int) and 400 <= code < 500 and code != 429):
+                    raise  # bad request, auth or unknown model: retrying won't help
                 time.sleep(10 * (attempt + 1))
                 print(f"retrying after error: {e}")
         return restrict({})

@@ -54,7 +54,7 @@ def build_tools(store: Store) -> list:
 def default_llm():
     from langchain_google_genai import ChatGoogleGenerativeAI
 
-    return ChatGoogleGenerativeAI(model=os.getenv("GEMINI_MODEL", "gemini-2.5-flash"), temperature=0)
+    return ChatGoogleGenerativeAI(model=os.getenv("GEMINI_MODEL", "gemini-3.8-flash"), temperature=0)
 
 
 def build_agent(store: Store, llm: Any = None):
