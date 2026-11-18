@@ -36,7 +36,7 @@ class GeminiExtractor:
 
         self.genai = genai
         self.client = genai.Client(api_key=os.getenv("GOOGLE_API_KEY") or os.getenv("GEMINI_API_KEY"))
-        self.model = model or os.getenv("GEMINI_MODEL", "gemini-3.8-flash")
+        self.model = model or os.getenv("GEMINI_MODEL", "gemini-3.5-flash-lite")
         self.few_shot = list(few_shot)
         self.min_interval_s = min_interval_s  # free-tier rate limits
         self._last = 0.0
